@@ -43,8 +43,6 @@ source "proxmox-clone" "k3s-golden-image" {
   ssh_username             = "packer"
   ssh_password             = "packer"
   ssh_timeout              = "15m"
-  username                 = "packer"
-  password                 = "packer"
   
   numa                     = false
   os                       = "l26"
