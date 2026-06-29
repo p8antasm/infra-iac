@@ -41,7 +41,6 @@ source "proxmox-clone" "k3s-golden-image" {
   template_description     = "Golden Image Debian 13 optimized for K3s (Cilium, Loki, Tempo) with QEMU Agent. Built via Packer."
 
   ssh_username             = "root"
-  # ssh_password             = "packer"
   ssh_timeout              = "15m"
     
   numa                     = false
@@ -55,14 +54,6 @@ source "proxmox-clone" "k3s-golden-image" {
   cloud_init_disk_type     = "scsi"
 
   scsi_controller          = "virtio-scsi-pci"
-  # disks {
-  #   disk_size              = "32G"
-  #   type                   = "scsi"
-  #   storage_pool           = var.storage_pool
-  #   # format                 = "qcow2"
-  #   discard                = true
-  #   ssd                    = true
-  # }
 
   nameserver               = "192.168.0.1"
   network_adapters {
@@ -81,10 +72,9 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo apt update",
-      "sudo apt -y upgrade",
-      "sudo apt -y dist-upgrade",
-      "sudo apt install -y cloud-init qemu-guest-agent",
+      "sudo apt-get update",
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install -y cloud-init qemu-guest-agent",
       "sudo systemctl enable qemu-guest-agent"
     ]
   }
@@ -95,13 +85,8 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo apt -y autoremove --purge",
-      "sudo apt clean"
-    ]
-  }
-
-  provisioner "shell" {
-    inline = [
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get -y autoremove --purge",
+      "sudo DEBIAN_FRONTEND=noninteractive apt-get clean",
       "sudo systemctl stop rsyslog || true",
       "sudo rm -f /etc/ssh/ssh_host_*",
       "sudo truncate -s0 /etc/machine-id",
