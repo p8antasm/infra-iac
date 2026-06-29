@@ -7,7 +7,7 @@ packer {
   }
 }
 
-# Переменные (Секреты передаются из GitHub Actions)
+# Vars passed from Github Actions
  variable "pm_api_url" { type = string }
  variable "pm_api_token_id" { type = string }
  variable "pm_api_token_secret" { type = string }
@@ -19,7 +19,12 @@ variable "proxmox_node" {
 
 variable "source_vm_id" {
   type    = number
-  default = "9000" # ID базового шаблона Debian 13 Cloud-Init в PVE
+  default = 9000 # Base image ID
+}
+
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
 }
 
 source "proxmox-clone" "k3s-golden-image" {
@@ -35,29 +40,54 @@ source "proxmox-clone" "k3s-golden-image" {
   vm_id                    = 9100
   template_description     = "Golden Image Debian 13 optimized for K3s (Cilium, Loki, Tempo) with QEMU Agent. Built via Packer."
 
-  # Настройки подключения SSH для провижнинга
-  ssh_username             = "debian"
-  # Настройте cloud-init базового шаблона 9000, чтобы он принимал временный пароль или ключ
-  ssh_password             = "debian" 
+  ssh_username             = "packer"
+  ssh_password             = "packer"
   ssh_timeout              = "15m"
   
-  # Конфигурация VM для сборки
   cores                    = 2
   memory                   = 2048
-  
-  # Активируем QEMU Agent в Proxmox
   qemu_agent               = true
 
   cloud_init               = true
-  cloud_init_storage_pool  = true
+  cloud_init_storage_pool  = "local-lvm"
 }
 
 build {
+  name    = "golden-image"
   sources = ["source.proxmox-clone.k3s-golden-image"]
 
-  # Скрипт оптимизации ядра и подготовки под K3s/Cilium/Grafana Stack
+  provisioner "shell" {
+    inline = [
+      "sudo apt update",
+      "sudo apt -y upgrade",
+      "sudo apt -y dist-upgrade",
+      "sudo apt install -y cloud-init qemu-guest-agent",
+      "sudo systemctl enable qemu-guest-agent"
+    ]
+  }
+
   provisioner "shell" {
     script = "scripts/optimize-k3s.sh"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo apt -y autoremove --purge",
+      "sudo apt clean"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo systemctl stop rsyslog || true",
+      "sudo rm -f /etc/ssh/ssh_host_*",
+      "sudo truncate -s0 /etc/machine-id",
+      "sudo rm -f /var/lib/dbus/machine-id",
+      "sudo ln -s /etc/machine-id /var/lib/dbus/machine-id || true",
+      "sudo cloud-init clean --logs",
+      "sudo find /var/log -type f -exec truncate -s0 {} +",
+      "sudo rm -rf /tmp/* /var/tmp/*"
+    ]
   }
 }
 
