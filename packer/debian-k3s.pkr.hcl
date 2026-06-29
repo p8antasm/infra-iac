@@ -72,7 +72,6 @@ source "proxmox-clone" "k3s-golden-image" {
 
   ipconfig {
     ip                     = "dhcp"
-    gateway                = "192.168.0.1"
   }
 }
 
