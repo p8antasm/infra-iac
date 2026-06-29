@@ -40,7 +40,7 @@ source "proxmox-clone" "k3s-golden-image" {
   vm_id                    = 9100
   template_description     = "Golden Image Debian 13 optimized for K3s (Cilium, Loki, Tempo) with QEMU Agent. Built via Packer."
 
-  ssh_username             = "root"
+  # ssh_username             = "root"
   # ssh_password             = "packer"
   ssh_timeout              = "15m"
     
