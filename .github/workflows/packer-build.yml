@@ -21,25 +21,39 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Create docker volume for packer operations
+        run: |
+          docker volume create packer-operations
 
       - name: Packer Init
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
-            -e PACKER_PLUGIN_PATH='/workspace' \
+            -v packer-operations:/packer-operations \
+            -e PACKER_PLUGIN_PATH='/packer-operations' \
             hashicorp/packer:latest init .
 
       - name: Packer Validate
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
-            -e PACKER_PLUGIN_PATH='/workspace' \
+            -v packer-operations:/packer-operations \
+            -e PACKER_PLUGIN_PATH='/packer-operations' \
             hashicorp/packer:latest validate .
 
       - name: Packer Build
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
-            -e PACKER_PLUGIN_PATH='/workspace' \
+            -v packer-operations:/packer-operations \
+            -e PACKER_PLUGIN_PATH='/packer-operations' \
             -e PKR_VAR_pm_api_url \
             -e PKR_VAR_pm_api_token_id \
             -e PKR_VAR_pm_api_token_secret \
             hashicorp/packer:latest build -force .
+
+      - name: Delete docker volume packer-operations
+        run: |
+          docker volume rm packer-operations --force
 
