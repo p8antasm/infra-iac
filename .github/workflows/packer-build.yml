@@ -25,16 +25,19 @@ jobs:
       - name: Packer Init
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            -e PACKER_PLUGIN_PATH='/workspace' \
             hashicorp/packer:latest init .
 
       - name: Packer Validate
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            -e PACKER_PLUGIN_PATH='/workspace' \
             hashicorp/packer:latest validate .
 
       - name: Packer Build
         run: |
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            -e PACKER_PLUGIN_PATH='/workspace' \
             -e PKR_VAR_pm_api_url \
             -e PKR_VAR_pm_api_token_id \
             -e PKR_VAR_pm_api_token_secret \
