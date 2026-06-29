@@ -44,12 +44,15 @@ source "proxmox-clone" "k3s-golden-image" {
   ssh_password             = "packer"
   ssh_timeout              = "15m"
   
+  numa                     = false
+  os                       = "l26"
   cores                    = 2
   memory                   = 2048
   qemu_agent               = true
 
   cloud_init               = true
   cloud_init_storage_pool  = "local-lvm"
+  cloud_init_disk_type     = "scsi"
 
   scsi_controller          = "virtio-scsi-pci"
   disks {
@@ -59,6 +62,17 @@ source "proxmox-clone" "k3s-golden-image" {
     # format                 = "qcow2"
     discard                = true
     ssd                    = true
+  }
+
+  nameserver               = "192.168.0.1"
+  network_adapters {
+    bridge                 = "vmbr0"
+    model                  = "virtio"
+  }
+
+  ipconfig {
+    ip                     = "dhcp"
+    gateway                = "192.168.0.1"
   }
 }
 
