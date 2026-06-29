@@ -41,6 +41,9 @@ jobs:
           docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
             -v packer-operations:/packer-operations \
             -e PACKER_PLUGIN_PATH='/packer-operations' \
+            -e PKR_VAR_pm_api_url \
+            -e PKR_VAR_pm_api_token_id \
+            -e PKR_VAR_pm_api_token_secret \
             hashicorp/packer:latest validate .
 
       - name: Packer Build
