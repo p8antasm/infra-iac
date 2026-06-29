@@ -41,7 +41,6 @@ source "proxmox-clone" "k3s-golden-image" {
   template_description     = "Golden Image Debian 13 optimized for K3s (Cilium, Loki, Tempo) with QEMU Agent. Built via Packer."
 
   ssh_username             = "root"
-  ssh_host                 = "192.168.0.20"
   # ssh_password             = "packer"
   ssh_timeout              = "15m"
     
@@ -72,7 +71,7 @@ source "proxmox-clone" "k3s-golden-image" {
   }
 
   ipconfig {
-    ip                     = "192.168.0.20/24"
+    ip                     = "dhcp"
   }
 }
 
