@@ -50,6 +50,16 @@ source "proxmox-clone" "k3s-golden-image" {
 
   cloud_init               = true
   cloud_init_storage_pool  = "local-lvm"
+
+  scsi_controller_type     = "virtio-scsi-pci"
+  disks {
+    disk_size              = "32G"
+    type                   = "scsi"
+    storage_pool           = var.storage_pool
+    format                 = "qcow2"
+    discard                = true
+    ssd                    = true
+  }
 }
 
 build {
