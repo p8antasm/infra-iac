@@ -56,7 +56,7 @@ source "proxmox-clone" "k3s-golden-image" {
     disk_size              = "32G"
     type                   = "scsi"
     storage_pool           = var.storage_pool
-    format                 = "qcow2"
+    # format                 = "qcow2"
     discard                = true
     ssd                    = true
   }
