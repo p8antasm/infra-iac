@@ -43,7 +43,7 @@ source "proxmox-clone" "k3s-golden-image" {
   ssh_username             = "packer"
   ssh_password             = "packer"
   ssh_timeout              = "15m"
-  
+    
   numa                     = false
   os                       = "l26"
   cores                    = 2
@@ -54,7 +54,7 @@ source "proxmox-clone" "k3s-golden-image" {
   cloud_init_storage_pool  = "local-lvm"
   cloud_init_disk_type     = "scsi"
 
-  # scsi_controller          = "virtio-scsi-pci"
+  scsi_controller          = "virtio-scsi-pci"
   # disks {
   #   disk_size              = "32G"
   #   type                   = "scsi"
