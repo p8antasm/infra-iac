@@ -14,7 +14,7 @@ packer {
 
 variable "proxmox_node" {
   type    = string
-  default = "pve"
+  default = "rip-pc"
 }
 
 variable "source_vm_id" {
