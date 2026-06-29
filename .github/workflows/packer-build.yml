@@ -1,0 +1,42 @@
+name: "Build Proxmox Golden Image"
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packer/**'
+  workflow_dispatch:
+
+jobs:
+  packer-build:
+    name: "Packer Build"
+    runs-on: iac
+    
+    env:
+      PKR_VAR_pm_api_url: "https://192.168.0.2:8006/api2/json"
+      PKR_VAR_pm_api_token_id: ${{ secrets.PVE_TOKEN_ID }}
+      PKR_VAR_pm_api_token_secret: ${{ secrets.PVE_TOKEN_SECRET }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Packer Init
+        run: |
+          docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            hashicorp/packer:latest init .
+
+      - name: Packer Validate
+        run: |
+          docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            hashicorp/packer:latest validate .
+
+      - name: Packer Build
+        run: |
+          docker run --rm -v $(pwd)/packer:/workspace -w /workspace \
+            -e PKR_VAR_pm_api_url \
+            -e PKR_VAR_pm_api_token_id \
+            -e PKR_VAR_pm_api_token_secret \
+            hashicorp/packer:latest build -force .
+
