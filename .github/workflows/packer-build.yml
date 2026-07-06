@@ -12,14 +12,15 @@ jobs:
   packer-build:
     name: "Packer Build"
     runs-on: iac
-    
     env:
       PKR_VAR_pm_api_url: "https://192.168.0.2:8006/api2/json"
       PKR_VAR_pm_api_token_id: ${{ secrets.PVE_TOKEN_ID }}
       PKR_VAR_pm_api_token_secret: ${{ secrets.PVE_TOKEN_SECRET }}
+    outputs:
+      pm_api_url: ${{ env.PKR_VAR_pm_api_url }}
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Packer code
         uses: actions/checkout@v4
         with:
           clean: true
@@ -60,3 +61,9 @@ jobs:
         run: |
           docker volume rm packer-operations --force
 
+  trigger-tf-deploy:
+    needs: packer-build
+    uses: ./.github/workflows/terraform-deploy.yml
+    with:
+      pm_api_url: ${{ needs.packer-build.outputs.pm_api_url }}
+    secrets: inherit

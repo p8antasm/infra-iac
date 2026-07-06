@@ -1,0 +1,65 @@
+name: "Terraform deploy node pool"
+
+on:
+  workflow_call:
+    inputs:
+      pm_api_url:
+        required: true
+        type: string
+  # all secrets are inherited 
+
+jobs:
+  tf-deploy:
+    name: "Terraform deploy node pool"
+    runs-on: iac
+    env:
+
+    steps:
+      - name: Checkout Terraform code
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Create docker volume for terraform operations
+        run: |
+          docker volume create terraform-operations
+
+      - name: Terraform Init
+        run:
+          docker run --rm -v $(pwd)/terraform:/workspace -w /workspace \
+          -v terraform-operations:/terraform-operations \
+          -e TF_INPUT=0 \
+          -e TF_DATA_DIR='/terraform-operations' \
+          -e TF_IN_AUTOMATION=1 \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
+          hashicorp/terraform:latest init
+          
+      - name: Terraform Validate
+        run:
+          docker run --rm -v $(pwd)/terraform:/workspace -w /workspace \
+          -v terraform-operations:/terraform-operations \
+          -e TF_INPUT=0 \
+          -e TF_DATA_DIR='/terraform-operations' \
+          -e TF_IN_AUTOMATION=1 \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
+          -e TF_VAR_pm_api_url \
+          -e TF_VAR_pm_api_token_id \
+          -e TF_VAR_pm_api_token_secret \
+          hashicorp/terraform:latest validate
+
+      - name: Terraform Plan
+        run:
+          docker run --rm -v $(pwd)/terraform:/workspace -w /workspace \
+          -v terraform-operations:/terraform-operations \
+          -e TF_INPUT=0 \
+          -e TF_DATA_DIR='/terraform-operations' \
+          -e TF_IN_AUTOMATION=1 \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
+          -e TF_VAR_pm_api_url \
+          -e TF_VAR_pm_api_token_id \
+          -e TF_VAR_pm_api_token_secret \
+          hashicorp/terraform:latest plan -out tfplan
+      
+
+    
