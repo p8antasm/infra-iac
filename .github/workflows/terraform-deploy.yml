@@ -60,6 +60,17 @@ jobs:
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
           hashicorp/terraform:latest plan -out tfplan
-      
 
-    
+      - name: Terraform Apply
+        run:
+          docker run --rm -v $(pwd)/terraform:/workspace -w /workspace \
+          -v terraform-operations:/terraform-operations \
+          -e TF_INPUT=0 \
+          -e TF_DATA_DIR='/terraform-operations' \
+          -e TF_IN_AUTOMATION=1 \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
+          -e TF_VAR_pm_api_url \
+          -e TF_VAR_pm_api_token_id \
+          -e TF_VAR_pm_api_token_secret \
+          -e TF_VAR_ssh_authorized_keys=${{ secrets.ANSIBLE_INIT_KEY }} \
+          hashicorp/terraform:latest apply -auto-approve tfplan
