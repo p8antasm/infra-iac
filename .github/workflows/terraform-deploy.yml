@@ -30,7 +30,7 @@ jobs:
           docker volume create terraform-operations
 
       - name: Terraform Init
-        run:
+        run: |
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
