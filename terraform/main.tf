@@ -1,3 +1,4 @@
+# Configure the Proxmox provider with API connection details
 provider "proxmox" {
   pm_api_url      = var.pm_api_url
   pm_user         = var.pm_api_token_id
@@ -5,10 +6,12 @@ provider "proxmox" {
   pm_tls_insecure = true
 }
 
+# Create cloud-init configuration with SSH authorized keys
 data "template_cloudinit_config" "cloud_init" {
   ssh_authorized_keys = [var.ssh_authorized_keys]
 }
 
+# Create 3 K3s worker nodes by cloning the golden image
 resource "proxmox_vm_qemu" "k3s-node" {
   count             = 3
   name              = "debian-13-k3s-node-${count.index + 1}"
