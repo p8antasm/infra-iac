@@ -6,6 +6,7 @@ on:
       pm_api_url:
         required: true
         type: string
+  workflow_dispatch:
   # all secrets are inherited 
 
 jobs:
@@ -13,6 +14,9 @@ jobs:
     name: "Terraform deploy node pool"
     runs-on: iac
     env:
+      TF_VAR_pm_api_url: ${{ inputs.pm_api_url }}
+      TF_VAR_pm_api_token_id: ${{ secrets.PVE_TOKEN_ID }}
+      TF_VAR_pm_api_token_secret: ${{ secrets.PVE_TOKEN_SECRET }}
 
     steps:
       - name: Checkout Terraform code
