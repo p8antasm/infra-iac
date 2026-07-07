@@ -72,6 +72,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "while sudo fuser /var/lib/dpkg/lock-frontend /var/lib/apt/lists/lock >/dev/null 2>&1; do echo 'Waiting for apt lock...'; sleep 5; done",
       "sudo apt-get update",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade",
       "sudo DEBIAN_FRONTEND=noninteractive apt install -y cloud-init qemu-guest-agent",
