@@ -5,10 +5,6 @@ provider "proxmox" {
   insecure        = true
 }
 
-# Create cloud-init configuration with SSH authorized keys
-data "template_cloudinit_config" "cloud_init" {
-  ssh_authorized_keys = [var.ssh_authorized_keys]
-}
 
 # Create 3 K3s worker nodes by cloning the golden image
 resource "proxmox_virtual_environment_vm" "k3s-node" {
