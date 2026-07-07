@@ -41,7 +41,7 @@ jobs:
           hashicorp/terraform:latest init
           
       - name: Terraform Validate
-        run:
+        run: |
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
@@ -55,7 +55,7 @@ jobs:
           hashicorp/terraform:latest validate
 
       - name: Terraform Plan
-        run:
+        run: |
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
@@ -69,7 +69,7 @@ jobs:
           hashicorp/terraform:latest plan -out tfplan
 
       - name: Terraform Apply
-        run:
+        run: |
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
