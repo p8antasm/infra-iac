@@ -34,6 +34,7 @@ jobs:
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
+          -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
           -e TF_DATA_DIR='/terraform-operations/data' \
           -e TF_IN_AUTOMATION=1 \
@@ -45,6 +46,7 @@ jobs:
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
+          -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
           -e TF_DATA_DIR='/terraform-operations/data' \
           -e TF_IN_AUTOMATION=1 \
@@ -59,6 +61,7 @@ jobs:
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
+          -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
           -e TF_DATA_DIR='/terraform-operations/data' \
           -e TF_IN_AUTOMATION=1 \
@@ -73,6 +76,7 @@ jobs:
           docker run --rm -v "$(pwd)/terraform:/workspace" \
           -w /workspace \
           -v terraform-operations:/terraform-operations \
+          -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
           -e TF_DATA_DIR='/terraform-operations/data' \
           -e TF_IN_AUTOMATION=1 \
