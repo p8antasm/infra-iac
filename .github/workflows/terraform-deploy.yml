@@ -54,6 +54,7 @@ jobs:
           -e TF_VAR_pm_api_url \
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
+          -e TF_VAR_ssh_authorized_keys=${{ secrets.ANSIBLE_INIT_KEY }} \
           hashicorp/terraform:latest validate
 
       - name: Terraform Plan
@@ -69,6 +70,7 @@ jobs:
           -e TF_VAR_pm_api_url \
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
+          -e TF_VAR_ssh_authorized_keys=${{ secrets.ANSIBLE_INIT_KEY }} \
           hashicorp/terraform:latest plan -out tfplan
 
       - name: Terraform Apply
