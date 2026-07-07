@@ -36,9 +36,9 @@ jobs:
           -v terraform-operations:/terraform-operations \
           -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
-          -e TF_DATA_DIR='/terraform-operations/data' \
+          -e TF_DATA_DIR='/terraform-operations' \
           -e TF_IN_AUTOMATION=1 \
-          -e TF_PLUGIN_CACHE_DIR='/terraform-operations/cache' \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
           hashicorp/terraform:latest init
           
       - name: Terraform Validate
@@ -48,9 +48,9 @@ jobs:
           -v terraform-operations:/terraform-operations \
           -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
-          -e TF_DATA_DIR='/terraform-operations/data' \
+          -e TF_DATA_DIR='/terraform-operations' \
           -e TF_IN_AUTOMATION=1 \
-          -e TF_PLUGIN_CACHE_DIR='/terraform-operations/cache' \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
           -e TF_VAR_pm_api_url \
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
@@ -63,9 +63,9 @@ jobs:
           -v terraform-operations:/terraform-operations \
           -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
-          -e TF_DATA_DIR='/terraform-operations/data' \
+          -e TF_DATA_DIR='/terraform-operations' \
           -e TF_IN_AUTOMATION=1 \
-          -e TF_PLUGIN_CACHE_DIR='/terraform-operations/cache' \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
           -e TF_VAR_pm_api_url \
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
@@ -78,9 +78,9 @@ jobs:
           -v terraform-operations:/terraform-operations \
           -e TF_CLI_CONFIG_FILE='/workspace/.terraformrc-custom' \
           -e TF_INPUT=0 \
-          -e TF_DATA_DIR='/terraform-operations/data' \
+          -e TF_DATA_DIR='/terraform-operations' \
           -e TF_IN_AUTOMATION=1 \
-          -e TF_PLUGIN_CACHE_DIR='/terraform-operations/cache' \
+          -e TF_PLUGIN_CACHE_DIR='/terraform-operations' \
           -e TF_VAR_pm_api_url \
           -e TF_VAR_pm_api_token_id \
           -e TF_VAR_pm_api_token_secret \
