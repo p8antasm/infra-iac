@@ -7,6 +7,12 @@ packer {
   }
 }
 
+locals {
+  unattended_upgrades_conf  = file("${path.root}/assets/unattended-upgrades.conf")
+  auto_upgrades_conf        = file("${path.root}/assets/auto-upgrades.conf")
+}
+
+
 # Vars passed from Github Actions
  variable "pm_api_url" { type = string }
  variable "pm_api_token_id" { type = string }
@@ -85,6 +91,10 @@ build {
   }
 
   provisioner "shell" {
+    environment_vars = [
+      "UNATTENDED_UPDATES_CONF=${local.unattended_upgrades_conf}",
+      "AUTO_UPDATES_CONF=${local.auto_upgrades_conf}"
+    ]
     inline = [
       "sudo DEBIAN_FRONTEND=noninteractive apt-get -y autoremove --purge",
       "sudo DEBIAN_FRONTEND=noninteractive apt-get clean",
@@ -95,7 +105,9 @@ build {
       "sudo ln -s /etc/machine-id /var/lib/dbus/machine-id || true",
       "sudo cloud-init clean --logs",
       "sudo find /var/log -type f -exec truncate -s0 {} +",
-      "sudo rm -rf /tmp/* /var/tmp/*"
+      "sudo rm -rf /tmp/* /var/tmp/*",
+      "echo \"$UNATTENDED_UPGRADES_CONF\" > sudo tee /etc/apt/apt.conf.d/50-unattended-upgrades.conf > /dev/null",
+      "echo \"$AUTO_UPDATES_CONF\" > sudo tee /etc/apt/apt.conf.d/30-auto_upgrades.conf > /dev/null",
     ]
   }
 }
