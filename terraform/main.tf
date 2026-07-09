@@ -24,7 +24,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_node" {
   cpu {
     cores           = var.k3s_master_resources.cpu_cores
   }
-  disk = {
+  disk {
     scsi0 = {
       datastore_id = "local-lvm"
       size_gb      = var.k3s_master_resources.disk_size
@@ -66,7 +66,7 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
   cpu {
     cores           = var.k3s_worker_resources.cpu_cores
   }
-  disk = {
+  disk {
     scsi0 = {
       datastore_id = "local-lvm"
       size_gb      = var.k3s_worker_resources.disk_size
