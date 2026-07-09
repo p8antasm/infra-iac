@@ -40,7 +40,7 @@ jobs:
         run: |
           docker run --rm -v "$(pwd)/ansible:/workspace" \
           -v "$(pwd)/k3s-ansible:/k3s-ansible" \
-          -w /workspace \
+          -w /k3s-ansible \
           -e ANSIBLE_INIT_KEY \
           alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml /k3s-ansible/playbooks/site.yml
           
