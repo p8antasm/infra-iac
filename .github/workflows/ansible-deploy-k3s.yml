@@ -1,0 +1,43 @@
+name: "Ansible deploy k3s cluster"
+
+on:
+  workflow_run:
+    workflows: ["Terraform deploy node pool"]
+    types:
+      - completed
+
+jobs:
+  ansible-k3s-deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: iac
+    env:
+      ANSIBLE_INIT_KEY: ${{ secrets.ANSIBLE_INIT_KEY }}
+        
+    steps:
+      - name: Checkout Ansible code
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: Git clone k3s-io/k3s-ansible
+        run: |
+          git clone https://github.com/k3s-io/k3s-ansible.git
+          cd k3s-ansible
+          git checkout 1.2.1
+
+      - name: Ansible ping
+        run: |
+          docker run --rm -v "$(pwd)/ansible:/workspace" \
+          -w /workspace \
+          -e ANSIBLE_INIT_KEY \
+          alpine/ansible:2.21.0 ansible all -i /workspace/k3s-cluster-inventory.yml -m ping
+
+      - name: Ansible deploy k3s 
+        run: |
+          docker run --rm -v "$(pwd)/ansible:/workspace" \
+          -v "$(pwd)/k3s-ansible:/k3s-ansible" \
+          -w /workspace \
+          -e ANSIBLE_INIT_KEY \
+          alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml /k3s-ansible/playbooks/site.yml
+          

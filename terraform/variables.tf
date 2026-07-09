@@ -28,3 +28,38 @@ variable "storage_pool" {
 variable "ssh_authorized_keys" {
   type = string
 }
+
+variable "k3s_master_resouces" {
+  type = object({
+    instances     = number
+    cpu_cores     = number
+    ram_mb        = number
+    disk_size     = number
+  })
+  default = {
+    instances     = 1
+    cpu_cores     = 2
+    ram_mb        = 4
+    disk_size     = 18
+  }
+}
+
+variable "k3s_worker_resouces" {
+  type = object({
+    instances     = number
+    cpu_cores     = number
+    ram_mb        = number
+    disk_size     = number
+  })
+  default = {
+    instances     = 2
+    cpu_cores     = 4
+    ram_mb        = 8
+    disk_size     = 28
+  }
+}
+
+variable "vm_id_base_number" {
+  type = number
+  default = 9200
+}

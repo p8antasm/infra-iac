@@ -1,20 +1,19 @@
 name: "Terraform deploy node pool"
 
 on:
-  workflow_call:
-    inputs:
-      pm_api_url:
-        required: true
-        type: string
+  workflow_run:
+    workflows: ["Build Proxmox Golden Image"]
+    types:
+      - completed
   workflow_dispatch:
-  # all secrets are inherited 
 
 jobs:
   tf-deploy:
     name: "Terraform deploy node pool"
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: iac
     env:
-      TF_VAR_pm_api_url: ${{ inputs.pm_api_url }}
+      TF_VAR_pm_api_url: "https://192.168.0.2:8006/api2/json"
       TF_VAR_pm_api_token_id: ${{ secrets.PVE_TOKEN_ID }}
       TF_VAR_pm_api_token_secret: ${{ secrets.PVE_TOKEN_SECRET }}
 
