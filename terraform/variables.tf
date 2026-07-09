@@ -29,7 +29,7 @@ variable "ssh_authorized_keys" {
   type = string
 }
 
-variable "k3s_master_resouces" {
+variable "k3s_master_resources" {
   type = object({
     instances     = number
     cpu_cores     = number
@@ -44,7 +44,7 @@ variable "k3s_master_resouces" {
   }
 }
 
-variable "k3s_worker_resouces" {
+variable "k3s_worker_resources" {
   type = object({
     instances     = number
     cpu_cores     = number
