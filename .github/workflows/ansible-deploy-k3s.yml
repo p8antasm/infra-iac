@@ -5,6 +5,9 @@ on:
     workflows: ["Terraform deploy node pool"]
     types:
       - completed
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
   ansible-k3s-deploy:
