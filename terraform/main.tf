@@ -27,7 +27,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_node" {
   disk {
     interface    = "scsi0"
     datastore_id = "local-lvm"
-    size_gb      = var.k3s_master_resources.disk_size
+    size         = var.k3s_master_resources.disk_size
     discard      = "on"
     ssd          = true
   }
@@ -68,10 +68,9 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
   disk {
     interface    = "scsi0"
     datastore_id = "local-lvm"
-    size_gb      = var.k3s_worker_resources.disk_size
+    size         = var.k3s_worker_resources.disk_size
     discard      = "on"
     ssd          = true
-    }
   }
   initialization {
     dns {
