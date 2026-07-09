@@ -36,7 +36,7 @@ jobs:
           docker run --rm -v "$(pwd)/ansible:/workspace" \
           -v "$(pwd)/ansible_init_private_key:/ansible_init_private_key:ro" \
           -w /workspace \
-          alpine/ansible:2.18.0 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key -m ping
+          alpine/ansible:2.18.1 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key -m ping
           shred -u ansible_init_private_key
 
       - name: Ansible deploy k3s
@@ -47,5 +47,5 @@ jobs:
           -v "$(pwd)/k3s-ansible:/k3s-ansible" \
           -v "$(pwd)/ansible_init_private_key:/ansible_init_private_key:ro" \
           -w /k3s-ansible \
-          alpine/ansible:2.18.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key /k3s-ansible/playbooks/site.yml
+          alpine/ansible:2.18.1 ansible-playbook -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key /k3s-ansible/playbooks/site.yml
           shred -u ansible_init_private_key
