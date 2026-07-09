@@ -9,7 +9,7 @@ provider "proxmox" {
 # Create k3s_master nodes
 resource "proxmox_virtual_environment_vm" "k3s_master_node" {
   count             = var.k3s_master_resources.instances
-  name              = "k3s_node_${count.index + 1}"
+  name              = "k3s-node-${count.index + 1}"
   node_name         = var.proxmox_node
   vm_id             = var.vm_id_base_number + count.index
   clone {
@@ -50,7 +50,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_node" {
 # Create k3s_worker_nodes
 resource "proxmox_virtual_environment_vm" "k3s_node" {
   count             = var.k3s_worker_resources.instances
-  name              = "k3s_node_${count.index + var.k3s_master_resources.instances + 1}"
+  name              = "k3s-node-${count.index + var.k3s_master_resources.instances + 1}"
   node_name         = var.proxmox_node
   vm_id             = var.vm_id_base_number + var.k3s_master_resources.instances + count.index
   clone {

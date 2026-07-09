@@ -39,7 +39,7 @@ variable "k3s_master_resources" {
   default = {
     instances     = 1
     cpu_cores     = 2
-    ram_mb        = 4
+    ram_mb        = 4096
     disk_size     = 18
   }
 }
@@ -54,7 +54,7 @@ variable "k3s_worker_resources" {
   default = {
     instances     = 2
     cpu_cores     = 4
-    ram_mb        = 8
+    ram_mb        = 8192
     disk_size     = 28
   }
 }
