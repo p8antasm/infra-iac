@@ -14,7 +14,7 @@ jobs:
     # if: github.event.workflow_run.conclusion == 'success'
     runs-on: iac
     env:
-      ANSIBLE_INIT_KEY: ${{ secrets.ANSIBLE_INIT_KEY }}
+      ANSIBLE_INIT_PRIVATE_KEY: ${{ secrets.ANSIBLE_INIT_PRIVATE_KEY }}
         
     steps:
       - name: Checkout Ansible code
@@ -31,21 +31,21 @@ jobs:
 
       - name: Ansible ping
         run: |
-          echo "$ANSIBLE_INIT_KEY" > ansible_init_key
-          chmod 600 ansible_init_key
+          echo "$ANSIBLE_INIT_PRIVATE_KEY" > ansible_init_private_key
+          chmod 600 ansible_init_private_key
           docker run --rm -v "$(pwd)/ansible:/workspace" \
-          -v "$(pwd)/ansible_init_key:/ansible_init_key:ro" \
+          -v "$(pwd)/ansible_init_private_key:/ansible_init_private_key:ro" \
           -w /workspace \
-          alpine/ansible:2.21.0 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_key -m ping
-          shred -u ansible_init_key
+          alpine/ansible:2.21.0 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key -m ping
+          shred -u ansible_init_private_key
 
       - name: Ansible deploy k3s
         run: |
-          echo "$ANSIBLE_INIT_KEY" > ansible_init_key
-          chmod 600 ansible_init_key
+          echo "$ANSIBLE_INIT_PRIVATE_KEY" > ansible_init_private_key
+          chmod 600 ansible_init_private_key
           docker run --rm -v "$(pwd)/ansible:/workspace" \
           -v "$(pwd)/k3s-ansible:/k3s-ansible" \
-          -v "$(pwd)/ansible_init_key:/ansible_init_key:ro" \
+          -v "$(pwd)/ansible_init_private_key:/ansible_init_private_key:ro" \
           -w /k3s-ansible \
-          alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_key /k3s-ansible/playbooks/site.yml
-          shred -u ansible_init_key
+          alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key /k3s-ansible/playbooks/site.yml
+          shred -u ansible_init_private_key
