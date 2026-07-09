@@ -13,7 +13,6 @@ k3s_cluster:
   vars:
     ansible_port: 22
     ansible_user: root
-    ansible_ssh_private_key_file: /home/rip/.ssh/mcluster/ansible-init
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     k3s_version: v1.31.12+k3s1
     # The token should be a random string of reasonable length. You can generate

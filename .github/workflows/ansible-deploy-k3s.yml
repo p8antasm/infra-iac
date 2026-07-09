@@ -34,7 +34,7 @@ jobs:
           docker run --rm -v "$(pwd)/ansible:/workspace" \
           -w /workspace \
           -e ANSIBLE_INIT_KEY \
-          alpine/ansible:2.21.0 ansible all -i /workspace/k3s-cluster-inventory.yml -m ping
+          alpine/ansible:2.21.0 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key <(printf '%s' "$ANSIBLE_INIT_KEY") -m ping
 
       - name: Ansible deploy k3s 
         run: |
@@ -42,5 +42,5 @@ jobs:
           -v "$(pwd)/k3s-ansible:/k3s-ansible" \
           -w /k3s-ansible \
           -e ANSIBLE_INIT_KEY \
-          alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml /k3s-ansible/playbooks/site.yml
+          alpine/ansible:2.21.0 ansible-playbook -i /workspace/k3s-cluster-inventory.yml --private-key <(printf '%s' "$ANSIBLE_INIT_KEY") /k3s-ansible/playbooks/site.yml
           
