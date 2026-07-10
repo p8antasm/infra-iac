@@ -12,6 +12,7 @@ resource "proxmox_virtual_environment_vm" "k3s_master_node" {
   name              = "k3s-node-${count.index + 1}"
   node_name         = var.proxmox_node
   vm_id             = var.vm_id_base_number + count.index
+  reboot            = true
   clone {
     vm_id           = var.source_vm_id
   }
@@ -53,6 +54,7 @@ resource "proxmox_virtual_environment_vm" "k3s_node" {
   name              = "k3s-node-${count.index + var.k3s_master_resources.instances + 1}"
   node_name         = var.proxmox_node
   vm_id             = var.vm_id_base_number + var.k3s_master_resources.instances + count.index
+  reboot            = true
   clone {
     vm_id           = var.source_vm_id
   }
