@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "$ANSIBLE_INIT_PRIVATE_KEY" > ansible_init_private_key
           chmod 600 ansible_init_private_key
-          docker run --rm \
+          docker run --rm -v "$(pwd)/ansible:/workspace" \
           -v "$(pwd)/ansible_init_private_key:/ansible_init_private_key:ro" \
           alpine/ansible:2.18.1 ansible all -i /workspace/k3s-cluster-inventory.yml --private-key /ansible_init_private_key -m shell -a 'wget -q -O - https://github.com > /dev/null'
           shred -u ansible_init_private_key
